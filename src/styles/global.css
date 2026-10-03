@@ -39,9 +39,7 @@ button,a { -webkit-tap-highlight-color:transparent; }
 .hero-signature { display:block; font-size:11px; margin-top:18px; color:var(--muted); }
 .hero-signature a { color:var(--text); border-bottom:1px solid var(--border); }
 .hero-art { position:relative; background:var(--surface); border:1px solid var(--border); }
-.art-heading { position:absolute; inset:20px 26px auto; display:flex; justify-content:space-between; gap:16px; font-family:ui-monospace,Consolas,"PingFang SC",monospace; color:#526783; font-size:10px; letter-spacing:.05em; text-transform:uppercase; z-index:1; }
 .engine-figure img { display:block; width:100%; }
-.art-footnote { position:absolute; bottom:18px; left:26px; right:26px; font-size:10px; color:#526783; }
 .hero-caption { font-size:11px; color:var(--muted); line-height:1.7; margin:12px 0 0; }
 .progress { display:grid; grid-template-columns:1fr 2fr; gap:64px; padding-block:38px; margin-top:39px; border-top:1px solid var(--border); border-bottom:1px solid var(--border); }
 .progress h2 { display:flex; align-items:center; gap:9px; align-self:start; margin-top:5px; }
@@ -143,8 +141,6 @@ button,a { -webkit-tap-highlight-color:transparent; }
   .hero-header { grid-template-columns:1fr; gap:24px; margin:21px 0 27px; }
   .hero h1 { font-size:clamp(37px,8.8vw,59px); } :lang(zh-Hans) .hero h1 { font-size:clamp(29px,7vw,45px); }
   .hero-intro p { max-width:520px; font-size:15px; } .hero-signature { margin-top:13px; }
-  .art-heading { position:static; padding:13px 14px 0; font-size:8px; gap:8px; }
-  .art-footnote { position:static; padding:0 14px 13px; font-size:8px; }
   .hero-caption { font-size:10px; }
   .progress { grid-template-columns:1fr; gap:15px; margin-top:28px; padding-block:28px; }
   .progress h2 { margin:0; font-size:10px; } .progress p { font-size:15px; }

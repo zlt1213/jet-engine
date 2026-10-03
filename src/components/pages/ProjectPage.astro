@@ -2,6 +2,7 @@
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import Figure from '../Figure.astro';
 import PostCard from '../PostCard.astro';
+import engineCutawayRender from '../../assets/images/engine-cutaway-render.png';
 import { ui, type Locale } from '../../i18n/ui';
 import { site } from '../../data/site';
 import { pageUrl } from '../../lib/urls';
@@ -9,18 +10,15 @@ import { publicPosts } from '../../lib/posts';
 const { locale } = Astro.props as { locale: Locale };
 const t = ui[locale];
 const posts = (await publicPosts(locale)).slice(0, 3);
-const first = (await publicPosts(locale)).find((p) => p.data.translationKey === 'starting-the-project')!;
 ---
 <BaseLayout locale={locale} title={t.name} description={t.intro}>
   <section class="hero container">
     <div class="eyebrow hero-eyebrow"><span class="tiny-cross" aria-hidden="true">+</span>{t.edition}<span class="hero-project-code">KJ66 / 001</span></div>
     <div class="hero-header"><h1>{t.heroTitle}</h1><div class="hero-intro"><p>{t.intro}</p><span class="hero-signature">{t.by} <a href={site.github}>zlt1213</a></span></div></div>
     <div class="hero-art">
-      <div class="art-heading"><span>KJ66 — {locale === 'zh' ? '概念概览' : 'Concept overview'}</span><span>{t.figure}</span></div>
-      <Figure src={first.data.heroImage} alt={first.data.heroAlt} priority class="engine-figure" />
-      <p class="art-footnote">{t.previewEdition}</p>
+      <Figure src={engineCutawayRender} alt={t.heroAlt} priority class="engine-figure" />
     </div>
-    <p class="hero-caption">{first.data.heroCaption}</p>
+    <p class="hero-caption">{t.heroCaption}</p>
   </section>
   <section class="progress container" aria-labelledby="progress-title">
     <h2 id="progress-title" class="eyebrow"><span class="status-dot" aria-hidden="true"></span>{t.currentProgress}</h2>
