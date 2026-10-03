@@ -17,6 +17,7 @@ button,a { -webkit-tap-highlight-color:transparent; }
 .container { width:min(1120px,calc(100% - 64px)); margin-inline:auto; }
 .skip-link { position:absolute; left:20px; top:-80px; z-index:10; background:var(--accent); color:white; padding:8px 16px; }
 .skip-link:focus { top:8px; }
+.sr-only { position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip:rect(0,0,0,0); white-space:nowrap; border:0; }
 .site-header { border-bottom:1px solid var(--border); }
 .header-inner { display:grid; grid-template-columns:1fr auto auto; align-items:center; gap:40px; min-height:96px; }
 .brand { display:flex; align-items:center; gap:10px; font-size:17px; font-weight:650; letter-spacing:-.035em; white-space:nowrap; }
@@ -94,6 +95,12 @@ button,a { -webkit-tap-highlight-color:transparent; }
 .prose { font-size:18px; line-height:1.85; }
 :lang(zh-Hans) .prose { line-height:2; }
 .prose p { margin:20px 0; }
+.prose p:has(>img) { margin:32px 0 0; }
+.prose p:has(>img) img { display:block; width:100%; }
+.prose p:has(>img) + p:has(>em:only-child) { margin-top:12px; font-size:12px; line-height:1.8; color:var(--muted); }
+.prose p:has(>img) + p:has(>em:only-child) em { font-style:normal; }
+.prose .footnotes { border-top:1px solid var(--border); padding-top:12px; margin-top:32px; font-size:13px; line-height:1.8; color:var(--muted); overflow-wrap:anywhere; }
+.prose .footnotes li { margin-block:14px; }
 .prose h2 { font-size:26px; line-height:1.3; font-weight:550; letter-spacing:-.035em; margin:44px 0 20px; }
 .prose h3 { font-size:21px; margin-top:28px; }
 .prose a { color:var(--accent); text-decoration:underline; text-decoration-color:#a8beee; text-underline-offset:4px; }
