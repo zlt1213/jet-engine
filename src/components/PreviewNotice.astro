@@ -1,0 +1,8 @@
+---
+import { ui, type Locale } from '../i18n/ui';
+const { locale } = Astro.props as { locale: Locale };
+---
+<aside class="preview-notice" data-preview-notice aria-label={ui[locale].preview}>
+  <span class="notice-mark" aria-hidden="true">i</span>
+  <p><strong>{ui[locale].preview}{locale === 'zh' ? '。' : '.'}</strong> {ui[locale].notice}</p>
+</aside>

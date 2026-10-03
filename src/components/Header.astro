@@ -1,0 +1,20 @@
+---
+import { ui, type Locale } from '../i18n/ui';
+import { pageUrl } from '../lib/urls';
+import LanguageSwitch from './LanguageSwitch.astro';
+interface Props { locale: Locale; path: string; hasCounterpart?: boolean; }
+const { locale, path, hasCounterpart = true } = Astro.props;
+const t = ui[locale];
+const links = [{ path: '', label: t.project }, { path: 'build-log', label: t.buildLog }, { path: 'resources', label: t.resources }, { path: 'about', label: t.about }];
+const active = path.startsWith('tags/') || path.startsWith('build-log') ? 'build-log' : path;
+---
+<header class="site-header">
+  <div class="container header-inner">
+    <a class="brand" href={pageUrl(locale)} aria-label={t.name}>
+      <svg aria-hidden="true" width="29" height="29" viewBox="0 0 32 32" fill="none"><circle cx="16" cy="16" r="13" stroke="currentColor" stroke-width="1.4"/><path d="M16 5L19 12L26 11L22 17L26 23L18 21L13 28L13 20L5 18L12 14L11 7Z" fill="currentColor"/><circle cx="16" cy="16" r="3.4" fill="white"/></svg>
+      <span>{t.name}<span class="brand-dot">.</span></span>
+    </a>
+    <nav class="main-nav" aria-label={locale === 'zh' ? '主导航' : 'Main navigation'}>{links.map((link) => <a href={pageUrl(locale, link.path)} aria-current={active === link.path ? 'page' : undefined}>{link.label}</a>)}</nav>
+    {hasCounterpart && <LanguageSwitch locale={locale} path={path} />}
+  </div>
+</header>

@@ -1,0 +1,25 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PostCard from '../PostCard.astro';
+import { ui, type Locale, type Tag } from '../../i18n/ui';
+import { publicPosts, populatedTags } from '../../lib/posts';
+import { pageUrl } from '../../lib/urls';
+interface Props { locale: Locale; tag?: Tag; }
+const { locale, tag } = Astro.props;
+const t = ui[locale];
+const all = await publicPosts(locale);
+const posts = tag ? all.filter((p) => p.data.tags.includes(tag)) : all;
+const path = tag ? `tags/${tag}` : 'build-log';
+const other = await publicPosts(locale === 'en' ? 'zh' : 'en');
+const hasCounterpart = !tag || other.some((p) => p.data.tags.includes(tag));
+---
+<BaseLayout locale={locale} title={tag ? `${t.tagHeading}: ${t.tags[tag]}` : t.buildLog} description={t.logDescription} path={path} hasCounterpart={hasCounterpart}>
+  <section class="container archive">
+    <header class="page-heading"><p class="eyebrow">{t.buildLog} / KJ66</p><h1>{tag ? t.tags[tag] : t.logTitle}</h1><p>{t.logDescription}</p></header>
+    <nav class="tag-filter" aria-label={locale === 'zh' ? '按标签浏览' : 'Browse by tag'}>
+      <a class:list={['filter-link', { selected: !tag }]} aria-current={!tag ? 'page' : undefined} href={pageUrl(locale, 'build-log')}>{t.all}<span>{all.length}</span></a>
+      {populatedTags(all).map((key) => <a class:list={['filter-link', { selected: tag === key }]} aria-current={tag === key ? 'page' : undefined} href={pageUrl(locale, `tags/${key}`)}>{t.tags[key]}</a>)}
+    </nav>
+    <div class="post-list">{posts.map((post, index) => <PostCard post={post} locale={locale} index={index} heading="h2" />)}</div>
+  </section>
+</BaseLayout>

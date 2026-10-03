@@ -1,0 +1,43 @@
+---
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import { ui, type Locale } from '../i18n/ui';
+import { absoluteUrl, assetUrl } from '../lib/urls';
+import '../styles/global.css';
+interface Props { locale: Locale; title: string; description: string; path?: string; hasCounterpart?: boolean; }
+const { locale, title, description, path = '', hasCounterpart = true } = Astro.props;
+const otherLocale = locale === 'en' ? 'zh' : 'en';
+const lang = locale === 'zh' ? 'zh-Hans' : 'en';
+const pageTitle = title === ui[locale].name ? title : `${title} · ${ui[locale].name}`;
+---
+<!doctype html>
+<html lang={lang}>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content={description} />
+    <meta name="theme-color" content="#ffffff" />
+    <meta name="generator" content={Astro.generator} />
+    <title>{pageTitle}</title>
+    <link rel="icon" type="image/svg+xml" href={assetUrl('favicon.svg')} />
+    <link rel="canonical" href={absoluteUrl(locale, path)} />
+    <link rel="alternate" hreflang={lang} href={absoluteUrl(locale, path)} />
+    {hasCounterpart && <>
+      <link rel="alternate" hreflang={otherLocale === 'zh' ? 'zh-Hans' : 'en'} href={absoluteUrl(otherLocale, path)} />
+      <link rel="alternate" hreflang="x-default" href={absoluteUrl('en', path)} />
+    </>}
+    <link rel="alternate" type="application/rss+xml" title={ui[locale].name} href={absoluteUrl(locale, 'rss.xml')} />
+    <meta property="og:type" content={path.startsWith('build-log/') && path !== 'build-log/' ? 'article' : 'website'} />
+    <meta property="og:title" content={pageTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={absoluteUrl(locale, path)} />
+    <meta property="og:locale" content={locale === 'zh' ? 'zh_CN' : 'en_GB'} />
+    <meta name="twitter:card" content="summary" />
+  </head>
+  <body>
+    <a class="skip-link" href="#main">{ui[locale].skip}</a>
+    <Header locale={locale} path={path} hasCounterpart={hasCounterpart} />
+    <main id="main" tabindex="-1"><slot /></main>
+    <Footer locale={locale} />
+  </body>
+</html>

@@ -1,0 +1,20 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { ui, type Locale } from '../../i18n/ui';
+import { resources } from '../../data/resources';
+import { pageUrl, assetUrl } from '../../lib/urls';
+const { locale } = Astro.props as { locale: Locale };
+const t = ui[locale];
+const revisions = [...new Set(resources.map((r) => r.revision))];
+---
+<BaseLayout locale={locale} title={t.resources} description={t.resourcesDescription} path="resources">
+  <section class="container resources-page">
+    <header class="page-heading"><p class="eyebrow">{t.resources} / KJ66</p><h1>{t.resourcesTitle}</h1><p>{t.resourcesDescription}</p></header>
+    {resources.length === 0 ? <div class="empty-state">
+      <svg class="empty-icon" aria-hidden="true" width="68" height="76" viewBox="0 0 68 76" fill="none"><path d="M13 5h28l14 14v51H13V5Z" stroke="currentColor" stroke-width="1.5"/><path d="M41 5v14h14M23 35h22M23 44h22M23 53h12" stroke="currentColor" stroke-width="1.5"/><circle cx="54" cy="58" r="11" fill="#f4f7fb" stroke="currentColor" stroke-width="1.5"/><path d="M49 58h10M54 53v10" stroke="currentColor" stroke-width="1.5"/></svg>
+      <h2>{t.emptyTitle}</h2><p>{t.emptyDescription}</p>
+      <a class="text-link" href={pageUrl(locale, 'build-log')}>{t.buildLog}<span aria-hidden="true">↗</span></a>
+    </div> : revisions.map((revision) => <section class="resource-revision"><h2>{revision}</h2>{resources.filter((r) => r.revision === revision).map((resource) => <article class="resource-entry"><h3><a href={/^(https?:)?\/\//.test(resource.url) ? resource.url : assetUrl(resource.url)}>{resource.title[locale]} ↗</a></h3><p>{resource.description[locale]}</p></article>)}</section>)}
+    <p class="resources-note">{t.resourcesNote}</p>
+  </section>
+</BaseLayout>

@@ -1,0 +1,131 @@
+# Jet Engine Notebook · 喷气发动机手记
+
+A personal, bilingual notebook about a KJ66-based small jet engine project. The site uses Astro, Markdown, original conceptual SVG illustrations, and GitHub Pages.
+
+- English URL: [zlt1213.github.io/jet-engine](https://zlt1213.github.io/jet-engine/)
+- 中文地址：[zlt1213.github.io/jet-engine/zh](https://zlt1213.github.io/jet-engine/zh/)
+- [Project repository](https://github.com/zlt1213/jet-engine)
+
+The opening edition contains three **editorial previews** in both languages. Their illustrations describe concepts and planned investigations. Real CAD revisions, simulation results, and measurements will be identified when they are available. Resources currently has an empty release list.
+
+## Develop locally
+
+Use Node 24 and npm. `.nvmrc` selects the runtime when using a Node version manager.
+
+```sh
+npm ci
+npm run dev
+```
+
+Open `http://localhost:4321/jet-engine/`. Chinese pages are under `/jet-engine/zh/`.
+
+```sh
+npm run check
+npm run build
+npm run verify
+npm run preview
+```
+
+The preview command serves the production output at the same repository prefix. With Astro 7, preview runs as a background service; use `npx astro preview stop` to stop it, or `npx astro preview status` to inspect it.
+
+`verify` checks generated page/asset links, document languages, canonical URLs, paired article links, post ordering, Start here links, RSS, sitemap, and publication notices. It does not contact external sites.
+
+Run the publication regression check when changing publication behavior:
+
+```sh
+npm run test:publication
+```
+
+This creates temporary draft/preview fixtures, tests draft exclusion and a preview-to-published transition, then removes them and verifies a final clean build. Do not run it concurrently with another build or a deployment.
+
+## Add an article
+
+Create matching Markdown files:
+
+```text
+src/content/blog/en/your-article-key.md
+src/content/blog/zh/your-article-key.md
+```
+
+Use the same `translationKey` in both files. It becomes the stable article slug. English articles use `/build-log/<key>/`; Chinese counterparts use `/zh/build-log/<key>/`, both beneath `/jet-engine/`.
+
+Example English frontmatter (set the actual publication date):
+
+```yaml
+---
+translationKey: your-article-key
+locale: en
+title: "The question this update answers"
+description: "Describe the question in one sentence. Explain the change or investigation in a second sentence."
+pubDate: "2026-10-03"
+tags: [design, cad]
+heroImage: "../../../assets/illustrations/engine-overview.svg"
+heroAlt: "Describe what the image shows."
+heroCaption: "Identify the actual revision or label a conceptual illustration."
+status: draft
+---
+```
+
+For the Chinese file, set `locale: zh` and translate the title, summary, body, alternative text, and caption. Keep the key and publication date aligned. An optional `updatedDate` records a real editorial update in the same date format.
+
+Available tag keys: `design`, `cad`, `simulation`, `manufacturing`, `testing`. Display labels are translated in `src/i18n/ui.ts`. Only populated tag archives are linked.
+
+Publication statuses:
+
+- `draft`: excluded from production pages, listings, RSS, and sitemap. This is the default when status is omitted.
+- `editorial-preview`: public, with a visible notice and listing label. Describe planned work and open questions.
+- `published`: public, without a preview notice. Use it when the article contains supported project work. Replace speculative text and supply the relevant evidence before changing this status; a status change alone adds no evidence.
+
+Posts are sorted by publication date descending, then article key ascending for ties. The homepage shows three. The six launch articles must retain public English and Chinese versions; later articles can temporarily lack a translation, in which case their unavailable language switch is omitted.
+
+Write each evidence-backed article around one problem or milestone: objective, changes, images/comparisons, lessons, and unresolved issues. Label intended benefits, calculations, simulations, and actual measurements clearly.
+
+## Images and links
+
+Store original local images under `src/assets/`. The frontmatter image path is relative to the article file. SVGs retain their vector format. Raster hero images use Astro's optimized image component. Dimensions and alternative text are required, and below-fold listing images load lazily.
+
+Markdown supports local images with relative paths:
+
+```md
+![Describe this view.](../../../assets/illustrations/source-to-cad.svg)
+
+*Conceptual schematic. Explain what can and cannot be inferred from the image.*
+```
+
+Use relative links between sibling articles, for example:
+
+```md
+[Related investigation](../combustor-and-fuel-routing/)
+```
+
+In Astro components, use `pageUrl(locale, path)` from `src/lib/urls.ts`. For files in `public/`, use `assetUrl(path)`. Do not manually add `/jet-engine/` to a URL already generated by Astro or its helpers.
+
+## Update project progress
+
+Edit `site.progress.en` and `site.progress.zh` in `src/data/site.ts`. This is a manually maintained note, independent of publication dates. Keep it brief and describe the work actually underway. The homepage's Start here link points to `starting-the-project` in the current language.
+
+## Add real revision resources
+
+Keep `src/data/resources.ts` empty until files exist. Add each real release with a revision identifier, localized title/description, kind, and working URL. Entries are grouped by revision.
+
+For a small site-hosted file, put it in `public/downloads/` and set its URL to `downloads/<actual-revision>/<filename>`. For a large model or drawing bundle, use the exact HTTPS URL of its GitHub Release asset. Retain earlier revision entries and links when adding a newer release. Do not publish a resource entry before its target file is available.
+
+## Publish
+
+The site is configured for `https://zlt1213.github.io/jet-engine/`:
+
+- `site`: `https://zlt1213.github.io`
+- `base`: `/jet-engine`
+- English at the base root; Simplified Chinese under `/zh/`
+
+In the GitHub repository, choose **Settings → Pages → Source → GitHub Actions**. A push to `main` runs `.github/workflows/deploy.yml`: content/type checks, production build, generated-output verification, artifact upload, and Pages deployment. The workflow can also be dispatched manually. Deployments run serially.
+
+Pull requests to `main` run `.github/workflows/checks.yml` using `npm ci`. They do not deploy. Actions are pinned to verified commit SHAs with version comments. Dependency versions are recorded in `package-lock.json`.
+
+After publication, check both homepages and direct nested article URLs, reload the pages, and confirm that CSS, images, and language switching work. If the domain or repository changes, update `astro.config.mjs`, site identity data, README URLs, and the base-aware checks together.
+
+## Implementation reference
+
+The application began from the [official Astro blog example](https://github.com/withastro/astro/tree/main/examples/blog). The starter was downloaded directly from that official source after the create-astro template downloader failed. Example content, demo images, MDX, and bundled demo fonts were removed.
+
+`PLAN.md` is the original implementation handoff and was preserved unchanged. Its checkboxes describe the planned acceptance criteria; they are not an automatically maintained progress report.

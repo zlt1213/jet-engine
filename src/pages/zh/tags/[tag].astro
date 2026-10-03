@@ -1,0 +1,10 @@
+---
+import Page from '../../../components/pages/BuildLogPage.astro';
+import { publicPosts, populatedTags } from '../../../lib/posts';
+import type { Tag } from '../../../i18n/ui';
+export async function getStaticPaths() {
+  return populatedTags(await publicPosts('zh')).map((tag) => ({ params: { tag }, props: { tag } }));
+}
+const { tag } = Astro.props as { tag: Tag };
+---
+<Page locale="zh" tag={tag} />

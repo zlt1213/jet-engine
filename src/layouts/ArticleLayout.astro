@@ -1,0 +1,37 @@
+---
+import { render } from 'astro:content';
+import BaseLayout from './BaseLayout.astro';
+import Figure from '../components/Figure.astro';
+import PreviewNotice from '../components/PreviewNotice.astro';
+import { ui, formatDate } from '../i18n/ui';
+import { publicPosts, publicCounterpart, type Post } from '../lib/posts';
+import { pageUrl } from '../lib/urls';
+const { post } = Astro.props as { post: Post };
+const locale = post.data.locale;
+const t = ui[locale];
+const { Content } = await render(post);
+const counterpart = await publicCounterpart(post);
+const posts = await publicPosts(locale);
+const index = posts.findIndex((p) => p.id === post.id);
+const newer = posts[index - 1];
+const older = posts[index + 1];
+---
+<BaseLayout locale={locale} title={post.data.title} description={post.data.description} path={`build-log/${post.data.translationKey}`} hasCounterpart={Boolean(counterpart)}>
+  <article class="article container" data-article-status={post.data.status} data-article-key={post.data.translationKey}>
+    <header class="article-header">
+      <a class="back-link" href={pageUrl(locale, 'build-log')}><span aria-hidden="true">←</span>{t.backToLog}</a>
+      <div class="post-meta"><span>{t.published} <time datetime={post.data.pubDate.toISOString().slice(0, 10)}>{formatDate(post.data.pubDate, locale)}</time></span><span class="post-tags">{post.data.tags.map((tag) => <a href={pageUrl(locale, `tags/${tag}`)}>{t.tags[tag]}</a>)}</span></div>
+      <h1>{post.data.title}</h1><p class="article-description">{post.data.description}</p>
+      {post.data.updatedDate && <p class="updated-date">{t.updated} {formatDate(post.data.updatedDate, locale)}</p>}
+    </header>
+    <Figure src={post.data.heroImage} alt={post.data.heroAlt} caption={post.data.heroCaption} priority class="article-figure" />
+    <div class="reading-column">
+      {post.data.status === 'editorial-preview' && <PreviewNotice locale={locale} />}
+      <div class="prose"><Content /></div>
+      <nav class="article-pagination" aria-label={locale === 'zh' ? '相邻文章' : 'Adjacent entries'}>
+        {newer && <a href={pageUrl(locale, `build-log/${newer.data.translationKey}`)}><span>{t.newer}</span><strong>← {newer.data.title}</strong></a>}
+        {older && <a class="older-entry" href={pageUrl(locale, `build-log/${older.data.translationKey}`)}><span>{t.older}</span><strong>{older.data.title} →</strong></a>}
+      </nav>
+    </div>
+  </article>
+</BaseLayout>
