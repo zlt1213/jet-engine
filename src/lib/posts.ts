@@ -1,7 +1,7 @@
 import { getCollection, type CollectionEntry } from 'astro:content';
 import { locales, type Locale, type Tag } from '../i18n/ui';
 export type Post = CollectionEntry<'blog'>;
-const launchKeys = ['starting-the-project', 'reconstructing-from-drawings', 'combustor-and-fuel-routing'];
+const launchKeys = ['starting-the-project', 'reconstructing-from-drawings', 'combustor-and-fuel-routing', 'kj66-pros-and-cons'];
 async function validatedPosts() {
   const posts = await getCollection('blog');
   const seen = new Set<string>();

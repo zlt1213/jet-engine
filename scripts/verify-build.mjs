@@ -73,7 +73,7 @@ for (const [url, doc] of documents) {
 
 const contentFiles = (await walk(resolve('src/content/blog'))).filter((f) => f.endsWith('.md'));
 const posts = contentFiles.map((file) => ({ file, ...matter.read(file).data }));
-const launch = ['starting-the-project', 'reconstructing-from-drawings', 'combustor-and-fuel-routing'];
+const launch = ['starting-the-project', 'reconstructing-from-drawings', 'combustor-and-fuel-routing', 'kj66-pros-and-cons'];
 const sitemapFile = files.find((file) => file.endsWith('sitemap-0.xml'));
 const sitemap = sitemapFile ? await readFile(sitemapFile, 'utf8') : '';
 check(Boolean(sitemapFile), 'Missing sitemap');
